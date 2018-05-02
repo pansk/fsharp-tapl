@@ -9,10 +9,13 @@
     <OutputType>Library</OutputType>
     <RootNamespace>support</RootNamespace>
     <AssemblyName>support</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <Name>support</Name>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <TargetFSharpCoreVersion>4.4.3.0</TargetFSharpCoreVersion>
+    <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,37 +36,55 @@
     <WarningLevel>3</WarningLevel>
     <DocumentationFile>bin\Release\support.XML</DocumentationFile>
   </PropertyGroup>
+  <Choose>
+    <When Condition="'$(VisualStudioVersion)' == '11.0'">
+      <PropertyGroup>
+        <FSharpTargetsPath>$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets</FSharpTargetsPath>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <FSharpTargetsPath>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\FSharp\Microsoft.FSharp.Targets</FSharpTargetsPath>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+  <Import Project="$(FSharpTargetsPath)" Condition="Exists('$(FSharpTargetsPath)')" />
   <ItemGroup>
-    <Reference Include="FSharp.PowerPack">
-      <HintPath>..\packages\FSPowerPack.Community.2.1.3.1\lib\Net40\FSharp.PowerPack.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <Compile Include="Error.fs" />
+    <Compile Include="Pervasives.fs" />
+    <Compile Include="AssemblyInfo.fs" />
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="FSharp.Compatibility.OCaml">
-      <HintPath>..\packages\FSharp.Compatibility.OCaml.0.1.9\lib\net40\FSharp.Compatibility.OCaml.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\FSharp.Compatibility.OCaml.0.1.13\lib\net40\FSharp.Compatibility.OCaml.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.Compatibility.OCaml.Format">
-      <HintPath>..\packages\FSharp.Compatibility.OCaml.Format.0.1.9\lib\net40\FSharp.Compatibility.OCaml.Format.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\FSharp.Compatibility.OCaml.Format.0.1.13\lib\net40\FSharp.Compatibility.OCaml.Format.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.Compatibility.OCaml.System">
-      <HintPath>..\packages\FSharp.Compatibility.OCaml.System.0.1.9\lib\net40\FSharp.Compatibility.OCaml.System.dll</HintPath>
+      <HintPath>..\packages\FSharp.Compatibility.OCaml.System.0.1.13\lib\net40\FSharp.Compatibility.OCaml.System.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <Private>True</Private>
     </Reference>
+    <Reference Include="FSharp.PowerPack">
+      <HintPath>..\packages\FSPowerPack.Core.Community.3.0.0.0\Lib\Net40\FSharp.PowerPack.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.PowerPack.Linq">
+      <HintPath>..\packages\FSPowerPack.Linq.Community.3.0.0.0\Lib\Net40\FSharp.PowerPack.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.PowerPack.Metadata">
+      <HintPath>..\packages\FSPowerPack.Metadata.Community.3.0.0.0\Lib\Net40\FSharp.PowerPack.Metadata.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.PowerPack.Parallel.Seq">
+      <HintPath>..\packages\FSPowerPack.Parallel.Seq.Community.3.0.0.0\Lib\Net40\FSharp.PowerPack.Parallel.Seq.dll</HintPath>
+    </Reference>
     <Reference Include="mscorlib" />
-    <Reference Include="FSharp.Core" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-    <Compile Include="Error.fs" />
-    <Compile Include="Pervasives.fs" />
-    <Compile Include="AssemblyInfo.fs" />
-  </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\FSharp\1.0\Microsoft.FSharp.Targets" Condition="!Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
-  <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets" Condition=" Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
          Other similar extension points exist, see Microsoft.Common.targets.
     <Target Name="BeforeBuild">
